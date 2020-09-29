@@ -2,8 +2,9 @@ package com.coding3;
 import android.content.Intent;
 import android.content.res.Configuration;
 import com.facebook.react.ReactActivity;
+import com.facebook.react.GoogleCastActivity;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends GoogleCastActivity {
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

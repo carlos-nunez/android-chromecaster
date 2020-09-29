@@ -5,7 +5,7 @@
  * @format
  * @flow strict-local
  */
-
+import GoogleCast, {CastButton} from 'react-native-google-cast';
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -79,6 +79,7 @@ const App: () => React$Node = () => {
               }}
             />
           )}
+          <CastButton style={{width: 24, height: 24, tintColor: 'black'}} />
         </ScrollView>
       </SafeAreaView>
     </>
