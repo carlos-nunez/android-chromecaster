@@ -5,8 +5,11 @@
  * @format
  * @flow strict-local
  */
+import 'react-native-gesture-handler';
+
+import {NavigationContainer} from '@react-navigation/native';
 import GoogleCast, {CastButton} from 'react-native-google-cast';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,15 +19,20 @@ import {
   StatusBar,
   Navigator,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
+import {Provider as VideoProvider} from './context/VideoContext';
 import VideoPlayer from 'react-native-video-controls';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Orientation from 'react-native-orientation-locker';
+import {Context as VideoContext} from './context/VideoContext';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const App: () => React$Node = () => {
-  const [vid, setVid] = useState(null);
+const App2: () => React$Node = ({navigation}) => {
   const [fullscreen, setFullscreen] = useState(false);
   const window = Dimensions.get('window');
+  const {state, fetchVideos} = useContext(VideoContext);
+  const {video} = state;
 
   var useOrientationChange = (o) => {
     o == 'PORTRAIT'
@@ -32,29 +40,24 @@ const App: () => React$Node = () => {
       : (setFullscreen(true), StatusBar.setHidden(true));
 
     // Handle orientation change
-    console.log('Handi');
-    console.log(o);
   };
 
   useEffect(() => {
     var initial = Orientation.getInitialOrientation();
     Orientation.lockToPortrait();
-    fetch(`https://player.vimeo.com/video/392590844/config`)
-      .then((res) => res.json())
-      .then((res) =>
-        setVid({
-          thumbnailUrl: res.video.thumbs['640'],
-          videoUrl:
-            res.request.files.hls.cdns[res.request.files.hls.default_cdn].url,
-          video: res.video,
-        }),
-      );
 
     Orientation.addOrientationListener(useOrientationChange);
     return () => {
       Orientation.removeOrientationListener(useOrientationChange);
     };
   }, []);
+
+  var vid = {
+    thumbnailUrl: video.video.thumbs['640'],
+    videoUrl:
+      video.request.files.hls.cdns[video.request.files.hls.default_cdn].url,
+    video: video.video,
+  };
 
   return (
     <>
@@ -77,6 +80,13 @@ const App: () => React$Node = () => {
               onLoad={() => {
                 console.log('Load');
               }}
+              onBack={() => {
+                Orientation.getOrientation((o) => {
+                  o !== 'PORTRAIT'
+                    ? Orientation.lockToPortrait()
+                    : navigation.goBack();
+                });
+              }}
             />
           )}
           <CastButton style={{width: 24, height: 24, tintColor: 'black'}} />
@@ -85,6 +95,48 @@ const App: () => React$Node = () => {
     </>
   );
 };
+
+function HomeScreen({navigation}) {
+  const {state, fetchVideos} = useContext(VideoContext);
+  const {video} = state;
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+  var vid = video
+    ? {
+        thumbnailUrl: video.video.thumbs['640'],
+        videoUrl:
+          video.request.files.hls.cdns[video.request.files.hls.default_cdn].url,
+        video: video.video,
+      }
+    : {};
+  console.log(vid.thumbnailUrl);
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <TouchableOpacity onPress={() => navigation.navigate('Video')}>
+        <Text>Home Screen</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator mode="card">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Video"
+          component={App2}
+          options={{headerBackTitle: 'Cancel', headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -136,4 +188,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default () => {
+  return (
+    <VideoProvider>
+      <App />
+    </VideoProvider>
+  );
+};
