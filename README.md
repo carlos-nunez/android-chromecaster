@@ -1,4 +1,8 @@
 # Boalt Coding Challenge
+## Introduction
+Hello Boalt,
+Thank you very much for the oppurtunity to complete this coding challenge. I hope the app fulfills the requirements and I get a chance to learn more about the company. Please let me know if you have any questions or issues: carlos.nunezalb@gmail.com
+
 ## Requirements
 - [x] Create an Android app that you self-host so that we can download it for review.
 - [x] Use React Native
