@@ -18,7 +18,7 @@ const window = Dimensions.get('window');
 
 function HomeScreen({navigation}) {
   const {state, fetchVideos} = useContext(VideoContext);
-  const {video} = state;
+  const {video, error, isLoaded} = state;
 
   /**
 Fetches the Video configuration file containing information such as the
@@ -28,13 +28,11 @@ thumbnailUrl, direct mp4 url, and video details.
     fetchVideos();
   }, []);
 
-  video ? console.log(video.video) : null;
-
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
+      <StatusBar barStyle="dark-content" />
       {video ? (
         <>
-          <StatusBar barStyle="dark-content" />
           <TouchableOpacity onPress={() => navigation.navigate('Video')}>
             <Image
               style={{height: 225, width: window.width}}
@@ -60,6 +58,7 @@ thumbnailUrl, direct mp4 url, and video details.
       ) : (
         <ActivityIndicator size="small" />
       )}
+      {error != '' ? <Text style={{color: 'red'}}>{error}</Text> : null}
     </View>
   );
 }

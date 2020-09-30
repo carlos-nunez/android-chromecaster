@@ -6,6 +6,12 @@ const videoReducer = (state, action) => {
       return {
         video: action.payload,
         isLoaded: true,
+        error: '',
+      };
+    case 'set_error':
+      return {
+        error: action.payload,
+        isLoaded: true,
       };
     default:
       return state;
@@ -26,6 +32,14 @@ const fetchVideos = (dispatch) => {
         dispatch({
           type: 'fetch_videos',
           payload: vid,
+        });
+      })
+      .catch((e) => {
+        console.log('Error');
+        dispatch({
+          type: 'set_error',
+          payload:
+            'Error loading video, please check your internet connection.',
         });
       });
   };
