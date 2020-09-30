@@ -24,7 +24,7 @@ const VideoScreen = ({navigation}) => {
   const [fullscreen, setFullscreen] = useState(false);
   const [session, setSession] = useState(false);
 
-  const {state, fetchVideos} = useContext(VideoContext);
+  const {state, fetchVideo} = useContext(VideoContext);
   const {video} = state;
 
   /**
@@ -104,8 +104,6 @@ Defines the action when the back button is pressed on the video controls
       playPosition: 0, // seconds
     });
   };
-
-  console.log(video);
 
   return (
     <>

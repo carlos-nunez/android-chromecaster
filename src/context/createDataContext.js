@@ -1,5 +1,11 @@
 import React, {useReducer} from 'react';
 
+/**
+Helper to easily create new Contexts.
+- reducer: the reducer containing the actions that modify the state.
+- actions: helper functions to dispatch actions.
+- defaultValue: the default state
+*/
 export default (reducer, actions, defaultValue) => {
   const Context = React.createContext();
 

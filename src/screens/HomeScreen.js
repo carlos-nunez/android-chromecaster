@@ -17,7 +17,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 const window = Dimensions.get('window');
 
 function HomeScreen({navigation}) {
-  const {state, fetchVideos} = useContext(VideoContext);
+  const {state, fetchVideo} = useContext(VideoContext);
   const {video, error, isLoaded} = state;
 
   /**
@@ -25,7 +25,7 @@ Fetches the Video configuration file containing information such as the
 thumbnailUrl, direct mp4 url, and video details.
   **/
   useEffect(() => {
-    fetchVideos();
+    fetchVideo();
   }, []);
 
   return (

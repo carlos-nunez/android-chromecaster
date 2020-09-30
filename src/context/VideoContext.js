@@ -1,8 +1,15 @@
 import createDataContext from './createDataContext';
 
+/**
+Actions to modify the state.
+- fetch_videos: dispatches when a video is successfully fetched. Stores the video in state,
+  sets isLoaded to true, and clears any previous error.
+- set_error: dispatches when a video is not successfully fetched.
+  The payload contains the error message to the user.
+**/
 const videoReducer = (state, action) => {
   switch (action.type) {
-    case 'fetch_videos':
+    case 'fetch_video':
       return {
         video: action.payload,
         isLoaded: true,
@@ -18,7 +25,10 @@ const videoReducer = (state, action) => {
   }
 };
 
-const fetchVideos = (dispatch) => {
+/**
+Fetches a video from vimeo and stores its details in global state.
+**/
+const fetchVideo = (dispatch) => {
   return async () => {
     fetch(`https://player.vimeo.com/video/392590844/config`)
       .then((res) => res.json())
@@ -30,7 +40,7 @@ const fetchVideos = (dispatch) => {
           video: res.video,
         };
         dispatch({
-          type: 'fetch_videos',
+          type: 'fetch_video',
           payload: vid,
         });
       })
@@ -45,8 +55,11 @@ const fetchVideos = (dispatch) => {
   };
 };
 
+/**
+Export the Provider and Context that is created by our Helper function createDataContext(reducer, actions, defaultValue)
+**/
 export const {Provider, Context} = createDataContext(
   videoReducer,
-  {fetchVideos},
+  {fetchVideo},
   {video: null, isLoaded: false},
 );

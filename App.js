@@ -29,7 +29,7 @@ function App() {
   const {isLoaded} = state;
 
   /**
-iOS Like Slide Animation for Screen Transition
+iOS Like Slide Animation for Screen Transition (Animation #1)
 **/
   const forSlide = ({current, next, inverted, layouts: {screen}}) => {
     const progress = Animated.add(
@@ -66,7 +66,7 @@ iOS Like Slide Animation for Screen Transition
   };
 
   return (
-    <AnimatedSplash
+    <AnimatedSplash //Animation #2
       translucent={true}
       isLoaded={isLoaded}
       logoImage={require('./splash.png')}
