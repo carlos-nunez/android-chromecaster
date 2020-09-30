@@ -16,36 +16,48 @@ import {Context as VideoContext} from '../context/VideoContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import GoogleCast, {CastButton} from 'react-native-google-cast';
 import Orientation from 'react-native-orientation-locker';
+const window = Dimensions.get('window');
 
-const VideoScreen: () => React$Node = ({navigation}) => {
+const VideoScreen = ({navigation}) => {
   const [fullscreen, setFullscreen] = useState(false);
 
   const {state, fetchVideos} = useContext(VideoContext);
   const {video} = state;
 
-  var useOrientationChange = (o) => {
+  /**
+- Syncs the fullscreen state of the video with the Orientation of the screen
+- Hides and StatusBar accordingly
+**/
+  var handleOrientationChange = (o) => {
     o == 'PORTRAIT'
       ? (setFullscreen(false), StatusBar.setHidden(false))
       : (setFullscreen(true), StatusBar.setHidden(true));
-
-    // Handle orientation change
   };
 
+  /**
+When the component mounts, lock it in portrait mode (and therefore control the initial orientation),
+and add an onChange event listener.
+**/
   useEffect(() => {
-    var initial = Orientation.getInitialOrientation();
     Orientation.lockToPortrait();
-
-    Orientation.addOrientationListener(useOrientationChange);
+    Orientation.addOrientationListener(handleOrientationChange);
     return () => {
-      Orientation.removeOrientationListener(useOrientationChange);
+      Orientation.removeOrientationListener(handleOrientationChange);
     };
   }, []);
 
-  var vid = {
-    thumbnailUrl: video.video.thumbs['640'],
-    videoUrl:
-      video.request.files.hls.cdns[video.request.files.hls.default_cdn].url,
-    video: video.video,
+  const toPortrait = () => Orientation.lockToPortrait();
+  const toLandscape = () => Orientation.lockToLandscape();
+
+  /**
+Defines the action when the back button is pressed on the video controls
+- If the screen is in fullscreen, it will go go to portrait mode. If it is in portrait mode, it will
+  go back to the prevous screen.
+**/
+  const onBackButtonPressed = () => {
+    Orientation.getOrientation((o) => {
+      o !== 'PORTRAIT' ? toPortrait() : navigation.goBack();
+    });
   };
 
   return (
@@ -53,29 +65,14 @@ const VideoScreen: () => React$Node = ({navigation}) => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView style={styles.scrollView}>
-          {vid == null ? null : (
+          {video == null ? null : (
             <VideoPlayer
               toggleResizeModeOnFullscreen={false}
               style={fullscreen ? styles.fullscreenVideo : styles.video}
-              source={{uri: vid.videoUrl}}
-              onExitFullscreen={() => {
-                {
-                  Orientation.lockToPortrait();
-                }
-              }}
-              onEnterFullscreen={() => {
-                Orientation.lockToLandscape();
-              }}
-              onLoad={() => {
-                console.log('Load');
-              }}
-              onBack={() => {
-                Orientation.getOrientation((o) => {
-                  o !== 'PORTRAIT'
-                    ? Orientation.lockToPortrait()
-                    : navigation.goBack();
-                });
-              }}
+              source={{uri: video.videoUrl}}
+              onExitFullscreen={toPortrait}
+              onEnterFullscreen={toLandscape}
+              onBack={onBackButtonPressed}
             />
           )}
           <CastButton style={{width: 24, height: 24, tintColor: 'black'}} />
@@ -90,13 +87,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
   video: {
-    height: Dimensions.get('window').width * (9 / 16),
-    width: Dimensions.get('window').width,
+    height: window.width * (9 / 16),
+    width: window.width,
     backgroundColor: 'black',
   },
   fullscreenVideo: {
-    height: Dimensions.get('window').width,
-    width: Dimensions.get('window').height,
+    height: window.width,
+    width: window.height,
     backgroundColor: 'black',
   },
 });

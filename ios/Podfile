@@ -14,6 +14,8 @@ target 'coding3' do
 
   pod 'react-native-google-cast', :path => '../node_modules/react-native-google-cast'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'coding3Tests' do
     inherit! :complete
     # Pods for testing

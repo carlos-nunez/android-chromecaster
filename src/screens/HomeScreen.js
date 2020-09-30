@@ -7,38 +7,59 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  StatusBar,
+  ActivityIndicator,
 } from 'react-native';
+import {Avatar, ListItem} from 'react-native-elements';
 
 import {Context as VideoContext} from '../context/VideoContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+const window = Dimensions.get('window');
 
 function HomeScreen({navigation}) {
   const {state, fetchVideos} = useContext(VideoContext);
   const {video} = state;
+
+  /**
+Fetches the Video configuration file containing information such as the
+thumbnailUrl, direct mp4 url, and video details.
+  **/
   useEffect(() => {
     fetchVideos();
   }, []);
 
-  var vid = video
-    ? {
-        thumbnailUrl: video.video.thumbs['640'],
-        videoUrl:
-          video.request.files.hls.cdns[video.request.files.hls.default_cdn].url,
-        video: video.video,
-      }
-    : {};
+  video ? console.log(video.video) : null;
 
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
-      <TouchableOpacity onPress={() => navigation.navigate('Video')}>
-        <Image
-          style={{height: 200, width: Dimensions.get('window').width}}
-          source={{
-            uri: vid.thumbnailUrl,
-          }}
-        />
-        <Text>{vid.video != null ? vid.video.title : null}</Text>
-      </TouchableOpacity>
+      {video ? (
+        <>
+          <StatusBar barStyle="dark-content" />
+          <TouchableOpacity onPress={() => navigation.navigate('Video')}>
+            <Image
+              style={{height: 225, width: window.width}}
+              source={{
+                uri: video.thumbnailUrl,
+              }}
+            />
+            <ListItem
+              title={video.video.title}
+              subtitle={video.video.owner.name}
+              chevron
+              leftAvatar={
+                <Avatar
+                  rounded
+                  source={{
+                    uri: video.video.owner.img,
+                  }}
+                />
+              }
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <ActivityIndicator size="small" />
+      )}
     </View>
   );
 }
