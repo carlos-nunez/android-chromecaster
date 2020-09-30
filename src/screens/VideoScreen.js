@@ -17,8 +17,8 @@ import {Context as VideoContext} from '../context/VideoContext';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import GoogleCast, {CastButton} from 'react-native-google-cast';
 import Orientation from 'react-native-orientation-locker';
-const window = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/Feather';
+const window = Dimensions.get('window');
 
 const VideoScreen = ({navigation}) => {
   const [fullscreen, setFullscreen] = useState(false);
