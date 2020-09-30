@@ -5,6 +5,7 @@ const videoReducer = (state, action) => {
     case 'fetch_videos':
       return {
         video: action.payload,
+        isLoaded: true,
       };
     default:
       return state;
@@ -27,5 +28,5 @@ const fetchVideos = (dispatch) => {
 export const {Provider, Context} = createDataContext(
   videoReducer,
   {fetchVideos},
-  {video: null},
+  {video: null, isLoaded: false},
 );
