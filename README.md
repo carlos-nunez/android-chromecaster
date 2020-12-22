@@ -1,7 +1,6 @@
 # Boalt Coding Challenge
 ## Introduction
-Hello Boalt,
-Thank you very much for the oppurtunity to complete this coding challenge. I hope the app fulfills the requirements and I get a chance to learn more about the company. Please let me know if you have any questions or issues: carlos.nunezalb@gmail.com,
+This video playing app is an entry for the 48 hour Boalt coding challenge.
 
 ## Requirements
 - [x] Create an Android app that you self-host so that we can download it for review.
@@ -15,9 +14,5 @@ Thank you very much for the oppurtunity to complete this coding challenge. I hop
 
 ## Details
 - The app can be downloaded above (Universal.apk) or from https://schemer.app/universal.apk.
-- I wasn't able to test the Chromecast functionality using an emulator. If there is a way to do so please let me know, I'll fix any problems and implement the full functionality with all the event listeners and expanded controls.
-- The test of app was tested on the Pixel 2 and Pixel 3a.
+- The app was tested on the Pixel 2 and Pixel 3a simulator.
 
-## Questions
-- In the requirement for streaming the media to a tv, would one option such as Chromecast suffice? Or would streaming to Apple TV also need to be implemented?
-- How can I test chrome cast using an android emulator?
