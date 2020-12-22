@@ -13,6 +13,6 @@ This video playing app is an entry for the 48 hour Boalt coding challenge.
 - [x] Please submit your app within 48 hours.
 
 ## Details
-- The app can be downloaded above (Universal.apk) or from https://schemer.app/universal.apk.
+- The app can be downloaded above (Universal.apk).
 - The app was tested on the Pixel 2 and Pixel 3a simulator.
 
